@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Mapping</title>
+</head>
+<body>
+    <h1>Data Mapping A</h1>
+    <pre id="resultA"></pre>
+
+    <h1>Data Visualization</h1>
+    <pre id="resultB"></pre>
+
+    <script>
+        const data_group_A = [
+            { branch: "Surabaya", posting_date: "2024-01-01" },
+            { branch: "Surabaya", posting_date: "2024-01-02" },
+            { branch: "Surabaya", posting_date: "2024-01-03" },
+            { branch: "Jakarta", posting_date: "2024-01-01" },
+            { branch: "Jakarta", posting_date: "2024-01-03" }
+        ];
+
+        const data_raw_A = [
+            { branch: "Surabaya", posting_date: "2024-01-01", customer: "CUST-001", grand_total: 100000 },
+            { branch: "Surabaya", posting_date: "2024-01-01", customer: "CUST-001", grand_total: 560000 },
+            { branch: "Jakarta", posting_date: "2024-01-01", customer: "CUST-001", grand_total: 720000 },
+            { branch: "Surabaya", posting_date: "2024-01-02", customer: "CUST-001", grand_total: 340000 },
+            { branch: "Surabaya", posting_date: "2024-01-02", customer: "CUST-001", grand_total: 568000 },
+            { branch: "Surabaya", posting_date: "2024-01-02", customer: "CUST-001", grand_total: 142000 },
+            { branch: "Surabaya", posting_date: "2024-01-02", customer: "CUST-001", grand_total: 256000 },
+            { branch: "Surabaya", posting_date: "2024-01-03", customer: "CUST-001", grand_total: 234500 },
+            { branch: "Surabaya", posting_date: "2024-01-03", customer: "CUST-001", grand_total: 345600 },
+            { branch: "Jakarta", posting_date: "2024-01-03", customer: "CUST-001", grand_total: 125000 },
+            { branch: "Jakarta", posting_date: "2024-01-03", customer: "CUST-001", grand_total: 70000 },
+            { branch: "Jakarta", posting_date: "2024-01-03", customer: "CUST-001", grand_total: 86000 }
+        ];
+
+        function mapData(data_group, data_raw) {
+            const result = [];
+
+            // Group by branch and calculate totals
+            const branch_totals = data_raw.reduce((acc, entry) => {
+                acc[entry.branch] = (acc[entry.branch] || 0) + entry.grand_total;
+                return acc;
+            }, {});
+
+            // Create top-level entries
+            for (const [branch, total] of Object.entries(branch_totals)) {
+                result.push({ indent: 0, branch, grand_total: total });
+
+                // Filter data_group by branch
+                const branch_group = data_group.filter(dg => dg.branch === branch);
+                for (const bg of branch_group) {
+                    const posting_date = bg.posting_date;
+                    const date_total = data_raw.filter(dr => dr.branch === branch && dr.posting_date === posting_date)
+                        .reduce((acc, dr) => acc + dr.grand_total, 0);
+                    result.push({ indent: 1, posting_date, grand_total: date_total });
+
+                    // Add individual transactions
+                    data_raw.filter(dr => dr.branch === branch && dr.posting_date === posting_date)
+                        .forEach(dr => result.push({ ...dr, indent: 2 }));
+                }
+            }
+
+            return result;
+        }
+
+        const resultA = mapData(data_group_A, data_raw_A);
+        document.getElementById('resultA').textContent = JSON.stringify(resultA, null, 2);
+
+        const data_group_B = [
+            { branch: "Surabaya" },
+            { branch: "Jakarta" }
+        ];
+
+        const data_x = [
+            { branch: "Surabaya", posting_date: "2024-01-01", visitors: 100 },
+            { branch: "Surabaya", posting_date: "2024-01-02", visitors: 80 },
+            { branch: "Surabaya", posting_date: "2024-01-03", visitors: 25 },
+            { branch: "Surabaya", posting_date: "2024-01-04", visitors: 36 },
+            { branch: "Surabaya", posting_date: "2024-01-05", visitors: 48 },
+            { branch: "Surabaya", posting_date: "2024-01-06", visitors: 24 },
+            { branch: "Surabaya", posting_date: "2024-01-07", visitors: 35 },
+            { branch: "Jakarta", posting_date: "2024-01-01", visitors: 200 },
+            { branch: "Jakarta", posting_date: "2024-01-02", visitors: 235 },
+            { branch: "Jakarta", posting_date: "2024-01-03", visitors: 125 },
+            { branch: "Jakarta", posting_date: "2024-01-04", visitors: 115 },
+            { branch: "Jakarta", posting_date: "2024-01-05", visitors: 168 },
+            { branch: "Jakarta", posting_date: "2024-01-06", visitors: 56 },
+            { branch: "Jakarta", posting_date: "2024-01-07", visitors: 300 }
+        ];
+
+        const data_y = [
+            { branch: "Surabaya", posting_date: "2024-01-01", total_transactions: 35 },
+            { branch: "Surabaya", posting_date: "2024-01-02", total_transactions: 24 },
+            { branch: "Surabaya", posting_date: "2024-01-03", total_transactions: 8 },
+            { branch: "Surabaya", posting_date: "2024-01-04", total_transactions: 19 },
+            { branch: "Surabaya", posting_date: "2024-01-06", total_transactions: 9 },
+            { branch: "Surabaya", posting_date: "2024-01-07", total_transactions: 12 },
+            { branch: "Jakarta", posting_date: "2024-01-01", total_transactions: 135 },
+            { branch: "Jakarta", posting_date: "2024-01-02", total_transactions: 124 },
+            { branch: "Jakarta", posting_date: "2024-01-04", total_transactions: 18 },
+            { branch: "Jakarta", posting_date: "2024-01-05", total_transactions: 79 },
+            { branch: "Jakarta", posting_date: "2024-01-06", total_transactions: 19 },
+            { branch: "Jakarta", posting_date: "2024-01-07", total_transactions: 112 }
+        ];
+
+        function calculateConversionRates(data_group, data_x, data_y) {
+            const result = data_group.map(group => {
+                const branch = group.branch;
+                const branch_data = { branch };
+
+                // Get all dates for this branch
+                const dates = [...new Set(data_x.filter(entry => entry.branch === branch).map(entry => entry.posting_date))];
+                dates.forEach(date => {
+                    const visitors = data_x.find(entry => entry.branch === branch && entry.posting_date === date)?.visitors || 0;
+                    const transactions = data_y.find(entry => entry.branch === branch && entry.posting_date === date)?.total_transactions || 0;
+
+                    const conversion_rate = visitors > 0 ? (transactions / visitors).toFixed(2) : 0;
+                    branch_data[date] = parseFloat(conversion_rate);
+                });
+
+                return branch_data;
+            });
+
+            return result;
+        }
+
+        const resultB = calculateConversionRates(data_group_B, data_x, data_y);
+        document.getElementById('resultB').textContent = JSON.stringify(resultB, null, 2);
+    </script>
+</body>
+</html>
