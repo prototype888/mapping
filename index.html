@@ -3,14 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Data Mapping</title>
+    <title>Data Mapping and Visualization</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        pre {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Data Mapping A</h1>
-    <pre id="resultA"></pre>
+    <div class="container mt-5">
+        <h1 class="text-center">Data Mapping and Visualization</h1>
 
-    <h1>Data Visualization</h1>
-    <pre id="resultB"></pre>
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h2>Data Mapping A</h2>
+                <pre id="resultA"></pre>
+            </div>
+        </div>
+
+        <div class="row mt-5">
+            <div class="col-md-12">
+                <h2>Data Visualization</h2>
+                <pre id="resultB"></pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
     <script>
         const data_group_A = [
